@@ -6,8 +6,20 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
-
+        admin_user:
+            memory:
+                users:
+                    admin:
+                        # password: secret
+                        password: "$2y$13$L6hO.SUAAXN6R.jeyWYFweb.v3Z9LMpmGdSKgUG41/6t2uQtPpHqO"
+                        roles: ['ROLE_SECRET']
     firewalls:
+        admin:
+            pattern: ^/admin
+            provider: admin_user
+            http_basic:
+                realm: "Administration"
+
         dev:
             # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
@@ -24,7 +36,7 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_SECRET }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

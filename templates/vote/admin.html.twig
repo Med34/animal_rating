@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Tableau des scores{% endblock %}
+
+{% block body %}
+    <h1>Le tableau des scores</h1>
+
+    {% if animalStats is not empty %}
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Animal</th>
+                    <th scope="col">Citations</th>
+                    <th scope="col">Note moyenne</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for animalStat in animalStats %}
+                    <tr>
+                        <th scope="row">{{ animalStat.animalName|capitalize }}</th>
+                        <td>{{ animalStat.citations }}</td>
+                        <td>{{ animalStat.avgScore|number_format(1) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {%  else %}
+        <p>Aucune donnée disponible</p>
+    {% endif %}
+{% endblock %}
