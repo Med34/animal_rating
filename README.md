@@ -39,7 +39,7 @@ Les tests d'intégration reconstruisent un schéma SQLite vierge à la volée (`
 donc rien à monter à la main avant de les lancer.
 
 - `NameNormalizerTest` : normalisation (minuscule + trim + accents).
-- `VoteRecorderTest` : un second vote du même votant écrase le premier, noms stockés normalisés.
+- `VoteRecorderTest` : re-voter un animal met à jour son score, et un votant ne garde que 3 animaux.
 - `VoteRepositoryTest` : classement des animaux par citations + note moyenne.
 
 ## Pages
@@ -52,15 +52,17 @@ donc rien à monter à la main avant de les lancer.
 
 ## Choix techniques
 
-- Les noms sont stockés en minuscule + trim (`NameNormalizer`) : `Jean`, `jean` et ` JEAN ` sont donc
-la même personne, et les votes s'agrègent quelle que soit la saisie.
+- Les noms sont stockés en minuscule + trim (`NameNormalizer`), donc `Jean`, `jean` et ` JEAN ` sont
+la même personne et les votes s'agrègent quelle que soit la saisie.
 
-- Une contrainte d'unicité sur `person_name` fait qu'un nouveau vote écrase le précédent.
+- Un votant garde jusqu'à 3 animaux. Le dernier saisi est toujours conservé. Au-delà de 3, on retire
+  celui qui a le plus petit score parmi les autres. Re-voter un même animal met juste à jour son score.
+  L'unicité est posée sur le couple `(person_name, animal_name)`.
 
 - À l'affichage, on recapitalise avec le filtre Twig `capitalize`. Du coup `jean-pierre` ressort en `Jean-pierre`.
 
-- Les noms n'acceptent que lettres, espaces, tirets et apostrophes (`NameFormat`), le score est un entier
-0–100.
+- Les noms n'acceptent que lettres, espaces, tirets et apostrophes (`NameFormat`). Le score est un entier
+de 0 à 100.
 
 - L'admin est derrière un HTTP Basic et lit ses stats via un petit DTO `AnimalStat`.
 

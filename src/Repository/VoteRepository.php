@@ -19,9 +19,17 @@ class VoteRepository extends ServiceEntityRepository
         parent::__construct($registry, Vote::class);
     }
 
-    public function findOneByPersonName(string $personName): ?Vote
+    public function findOneByPersonAndAnimal(string $personName, string $animalName): ?Vote
     {
-        return $this->findOneBy(['personName' => $personName]);
+        return $this->findOneBy(['personName' => $personName, 'animalName' => $animalName]);
+    }
+
+    /**
+     * @return Vote[] best score first, most recent in backup
+     */
+    public function findByPersonRanked(string $personName): array
+    {
+        return $this->findBy(['personName' => $personName], ['score' => 'DESC', 'id' => 'DESC']);
     }
 
     /**

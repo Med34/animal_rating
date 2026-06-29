@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VoteRepository::class)]
+#[ORM\UniqueConstraint(columns: ['person_name', 'animal_name'])]
 class Vote
 {
     #[ORM\Id]
@@ -18,7 +19,7 @@ class Vote
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Le nom est requis')]
     #[NameFormat]
     private string $personName;
